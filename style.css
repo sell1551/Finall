@@ -1,5 +1,5 @@
       :root {
-        --primary-color: red;
+        --primary-color:  #3a7ca5;
         --secondary-color: #16425b;
         --accent-color: #81c3d7;
         --text-color: #2c3e50;
@@ -221,7 +221,7 @@
         line-height: 0;
       }
 
-      /* Distance gauge styles */
+      /* untuk bagian jarak*/
       .gauge-container {
         width: 100%;
         height: 100%;
@@ -295,7 +295,7 @@
         opacity: 0.7;
       }
 
-      /* Weather widget styles */
+      /* umtuk bagian suhu*/
       .weather-widget {
         width: 100%;
         height: 100%;
