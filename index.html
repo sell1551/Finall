@@ -173,7 +173,7 @@
         } else if (humidValue >= 21 && humidValue <= 50) {
           iconClass = "wi wi-day-cloudy";
         } else if (humidValue > 51) {
-          iconClass = "wi wi-rain";
+          iconClass =" wi wi-hail";
         }
         
         // Update icon with animation
@@ -192,9 +192,9 @@
         const gaugeValue = document.getElementById("gaugeValue");
         const gaugeFill = document.getElementById("gaugeFill");
         
-        // Calculate percentage for the gauge (assuming max distance is 100cm)
-        const maxDistance = 100;
-        const percentage = Math.min(distance / maxDistance * 100, 100);
+        
+        
+        
         
         // Update gauge display
         gaugeValue.textContent = distance;
