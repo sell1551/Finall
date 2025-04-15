@@ -1,0 +1,477 @@
+      :root {
+        --primary-color: #3a7ca5;
+        --secondary-color: #16425b;
+        --accent-color: #81c3d7;
+        --text-color: #2c3e50;
+        --bg-light: #f5f7fa;
+        --card-bg: #ffffff;
+        --shadow-color: rgba(0, 0, 0, 0.1);
+        --transition-speed: 0.3s;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Montserrat', sans-serif;
+        background: var(--bg-light);
+        color: var(--text-color);
+        transition: background-color var(--transition-speed);
+      }
+
+      .bento_box {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        padding: 2rem;
+        max-width: 1600px;
+        margin: 0 auto;
+      }
+
+      .bento_container {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-auto-rows: minmax(150px, auto);
+        gap: 1.5rem;
+        width: 100%;
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4efe9 100%);
+        padding: 2rem;
+        border-radius: 1.5rem;
+        box-shadow: 0 15px 35px var(--shadow-color);
+        transition: all var(--transition-speed);
+      }
+
+      .bento_item {
+        background-color: var(--card-bg);
+        grid-column: var(--columns, span 1);
+        grid-row: var(--rows, span 1);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+        transition: all var(--transition-speed);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .bento_item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .bento_item::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+      }
+
+      /* yg buat header*/
+      .header_title {
+        width: 100%;
+        text-align: center;
+      }
+
+      .creative-text {
+        font-size: clamp(2rem, 4vw, 3.5rem);
+        font-weight: 700;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        line-height: 1.2;
+        margin-bottom: 1rem;
+      }
+
+      .creative-text span {
+        display: inline-block;
+        font-weight: 300;
+        color: var(--text-color);
+        opacity: 0.8;
+      }
+
+      /* Switch styles - enhanced */
+      .switch-container {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        width: 100%;
+        gap: 2rem;
+      }
+
+      .switch-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .switch-label {
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--text-color);
+        margin-bottom: 0.5rem;
+      }
+
+      .checkbox-wrapper-5 .check {
+        --size: 45px;
+        position: relative;
+        background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+        line-height: 0;
+        perspective: 400px;
+        font-size: var(--size);
+        border-radius: calc(var(--size) / 2);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      }
+
+      .checkbox-wrapper-5 .check input[type="checkbox"],
+      .checkbox-wrapper-5 .check label,
+      .checkbox-wrapper-5 .check label::before,
+      .checkbox-wrapper-5 .check label::after,
+      .checkbox-wrapper-5 .check {
+        appearance: none;
+        display: inline-block;
+        border-radius: calc(var(--size) / 2);
+        border: 0;
+        transition: .35s ease-in-out;
+        box-sizing: border-box;
+        cursor: pointer;
+      }
+
+      .checkbox-wrapper-5 .check label {
+        width: calc(2.2 * var(--size));
+        height: var(--size);
+        background: #d7d7d7;
+        overflow: hidden;
+      }
+
+      .checkbox-wrapper-5 .check input[type="checkbox"] {
+        position: absolute;
+        z-index: 1;
+        width: calc(.8 * var(--size));
+        height: calc(.8 * var(--size));
+        top: calc(.1 * var(--size));
+        left: calc(.1 * var(--size));
+        background: linear-gradient(45deg, #f5f7fa, #ffffff);
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+        outline: none;
+        margin: 0;
+      }
+
+      .checkbox-wrapper-5 .check input[type="checkbox"]:checked {
+        left: calc(1.3 * var(--size));
+      }
+
+      .checkbox-wrapper-5 .check input[type="checkbox"]:checked + label {
+        background: transparent;
+      }
+
+      .checkbox-wrapper-5 .check label::before,
+      .checkbox-wrapper-5 .check label::after {
+        content: "· ·";
+        position: absolute;
+        overflow: hidden;
+        left: calc(.15 * var(--size));
+        top: calc(.5 * var(--size));
+        height: var(--size);
+        letter-spacing: calc(-0.04 * var(--size));
+        color: #9b9b9b;
+        font-family: "Times New Roman", serif;
+        z-index: 2;
+        font-size: calc(.6 * var(--size));
+        border-radius: 0;
+        transform-origin: 0 0 calc(-0.5 * var(--size));
+        backface-visibility: hidden;
+      }
+
+      .checkbox-wrapper-5 .check label::after {
+        content: "●";
+        top: calc(.65 * var(--size));
+        left: calc(.2 * var(--size));
+        height: calc(.1 * var(--size));
+        width: calc(.35 * var(--size));
+        font-size: calc(.2 * var(--size));
+        transform-origin: 0 0 calc(-0.4 * var(--size));
+      }
+
+      .checkbox-wrapper-5 .check input[type="checkbox"]:checked + label::before,
+      .checkbox-wrapper-5 .check input[type="checkbox"]:checked + label::after {
+        left: calc(1.55 * var(--size));
+        top: calc(.4 * var(--size));
+        line-height: calc(.1 * var(--size));
+        transform: rotateY(360deg);
+      }
+
+      .checkbox-wrapper-5 .check input[type="checkbox"]:checked + label::after {
+        height: calc(.16 * var(--size));
+        top: calc(.55 * var(--size));
+        left: calc(1.6 * var(--size));
+        font-size: calc(.6 * var(--size));
+        line-height: 0;
+      }
+
+      /* Distance gauge styles */
+      .gauge-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .gauge-title {
+        font-size: 1.5rem;
+        font-weight: 500;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+      }
+
+      .gauge {
+        position: relative;
+        width: 200px;
+        height: 200px;
+      }
+
+      .gauge-body {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: #f5f7fa;
+        box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .gauge-fill {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        clip-path: polygon(50% 50%, 0% 0%, 0% 50%);
+        background: conic-gradient(
+          var(--primary-color) var(--percentage, 0%),
+          #f5f7fa var(--percentage, 0%)
+        );
+        transform: rotate(-90deg);
+        transition: background var(--transition-speed);
+      }
+
+      .gauge-cover {
+        position: absolute;
+        top: 20%;
+        left: 20%;
+        width: 60%;
+        height: 60%;
+        border-radius: 50%;
+        background: var(--card-bg);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .gauge-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--text-color);
+      }
+
+      .gauge-unit {
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--text-color);
+        opacity: 0.7;
+      }
+
+      /* Weather widget styles */
+      .weather-widget {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      }
+
+      .weather-icon {
+        flex: 1;
+        background: linear-gradient(135deg, #6db8e6, #91c8e4);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 5rem;
+        color: white;
+        padding: 2rem 0;
+        transition: background var(--transition-speed);
+      }
+
+      .weather-icon i {
+        text-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .weather-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        background: var(--secondary-color);
+        color: white;
+      }
+
+      .weather-temperature {
+        font-size: 2rem;
+        font-weight: 700;
+        padding: 1.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .weather-details {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      .weather-condition {
+        font-size: 1.2rem;
+        font-weight: 500;
+        text-transform: uppercase;
+      }
+
+      .weather-location {
+        font-size: 0.9rem;
+        opacity: 0.8;
+      }
+
+      .weather-humidity {
+        background: var(--accent-color);
+        padding: 1rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+        color: white;
+        font-weight: 500;
+      }
+
+      .humidity-icon {
+        font-size: 1.5rem;
+      }
+
+      /* Responsive media queries */
+      @media (max-width: 1200px) {
+        .bento_container {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+
+      @media (max-width: 992px) {
+        .bento_container {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .bento_container {
+          grid-template-columns: repeat(2, 1fr);
+          padding: 1rem;
+        }
+        
+        .creative-text {
+          font-size: 1.8rem;
+        }
+        
+        .bento_box {
+          padding: 1rem;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .bento_container {
+          grid-template-columns: 1fr;
+        }
+        
+        .switch-container {
+          flex-direction: column;
+        }
+      }
+
+      
+
+      /* Animations */
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .animate-pulse {
+        animation: pulse 2s infinite;
+      }
+
+      .animate-fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+      }
+
+      /* Tooltip styles */
+      [data-tooltip] {
+        position: relative;
+      }
+
+      [data-tooltip]::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: 125%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        white-space: nowrap;
+        opacity: 0;
+        visibility: hidden;
+        transition: all var(--transition-speed);
+        z-index: 100;
+      }
+
+      [data-tooltip]:hover::after {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      /* History chart */
+      .chart-container {
+        width: 100%;
+        height: 200px;
+        margin-top: 1rem;
+      }

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Environmental Monitoring System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,700&display=swap" />
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <main class="bento_box">
+      <div class="bento_container">
+        <div class="bento_item" style="--rows: 1; --columns: 1 / span 5;">
+          <div class="header_title">
+            <h1 class="creative-text animate-fade-in">
+              Environmental Monitoring & <span>Control System</span>
+            </h1>
+                <p>SELA ALIA XII-K3</p>
+          </div>
+        </div>
+
+        <div class="bento_item" style="--rows: 2; --columns: span 2;">
+          <h2 class="gauge-title">LED Controls</h2>
+          <div class="switch-container">
+            <div class="switch-card" data-tooltip="Control LED 1">
+              <span class="switch-label">LED 1</span>
+              <div class="checkbox-wrapper-5">
+                <div class="check">
+                  <input id="checkbox-1" type="checkbox" onclick="toggleLED()">
+                  <label for="checkbox-1"></label>
+                </div>
+              </div>
+            </div>
+            
+            <div class="switch-card" data-tooltip="Control LED 2">
+              <span class="switch-label">LED 2</span>
+              <div class="checkbox-wrapper-5">
+                <div class="check">
+                  <input id="checkbox-2" type="checkbox" onclick="toggleLED()">
+                  <label for="checkbox-2"></label>
+                </div>
+              </div>
+            </div>
+            
+            <div class="switch-card" data-tooltip="Control LED 3">
+              <span class="switch-label">LED 3</span>
+              <div class="checkbox-wrapper-5">
+                <div class="check">
+                  <input id="checkbox-3" type="checkbox" onclick="toggleLED()">
+                  <label for="checkbox-3"></label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bento_item" style="--rows: 2; --columns: span 3;">
+          <div class="gauge-container">
+            <h2 class="gauge-title">Distance Sensor</h2>
+            <div class="gauge">
+              <div class="gauge-body">
+                <div class="gauge-fill" id="gaugeFill"></div>
+                <div class="gauge-cover">
+                  <div>
+                    <span class="gauge-value" id="gaugeValue">0</span>
+                    <span class="gauge-unit">cm</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bento_item" style="--rows: 3; --columns: 1 / span 5;">
+          <div class="weather-widget">
+            <div class="weather-icon" id="weatherIcon">
+              <i class="wi wi-cloud"></i>
+            </div>
+            <div class="weather-info">
+              <div class="weather-temperature" id="tempID">
+                <span>0°C</span>
+              </div>
+              <div class="weather-details">
+                <div class="weather-condition" id="conditionID">Sedang</div>
+                <div class="weather-location" id="locationID">Coblong, Bandung</div>
+              </div>
+            </div>
+            <div class="weather-humidity" id="humidID">
+              <i class="wi wi-humidity humidity-icon"></i>
+              <span>0%</span>
+            </div>
+          </div>
+          <div class="chart-container" id="tempChart"></div>
+        </div>
+      </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script type="module"> //fungsi module ini supaya di private
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-app.js";
+      import {getDatabase, ref, onValue, set} from "https://www.gstatic.com/firebasejs/11.3.0/firebase-database.js";
+  
+      //config firebase
+      const firebaseConfig = {
+      apiKey: "AIzaSyD_Jr8rZ9N1j3nmxlcuofsMTLV3nZvvI1M",
+      authDomain: "fir-arduinoled-450b0.firebaseapp.com",
+      databaseURL: "https://fir-arduinoled-450b0-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "fir-arduinoled-450b0",
+      storageBucket: "fir-arduinoled-450b0.firebasestorage.app",
+      messagingSenderId: "1037295401640",
+      appId: "1:1037295401640:web:aafd59c0633202761fa09d",
+      measurementId: "G-TFPBNRRBHB"
+    };
+  
+      //inisialisasi firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
+      const ledRef = ref(db, 'aktuator');
+      const dhtRef = ref(db, 'Suhu');
+      const usRef = ref(db, 'Sensor'); //nama tabel
+
+      // variabel untuk suhu dan kelembapan
+      let humidity = 0;
+      let temperature = 0;
+      
+      let jarakValue = 0;
+      
+      // Historical data arrays for charts
+      const tempHistory = new Array(10).fill(25);
+      const humidityHistory = new Array(10).fill(25);
+      const distanceHistory = new Array(10).fill(0);
+      
+      // Create temperature & humidity chart
+      const tempChartCtx = document.createElement('canvas');
+      document.getElementById('tempChart').appendChild(tempChartCtx);
+
+      // Function to update weather condition based on temperature
+      function updateWeatherCondition(tempValue) {
+        const conditionElement = document.getElementById("conditionID");
+        
+        if (tempValue > 0 && tempValue <= 19) {
+          conditionElement.textContent = "Dingin";
+          document.getElementById("weatherIcon").style.background = "linear-gradient(135deg, #89CFF0, #6495ED)";
+        } else if (tempValue >= 20 && tempValue <= 30) {
+          conditionElement.textContent = "Sedang";
+          document.getElementById("weatherIcon").style.background = "linear-gradient(135deg, #6db8e6, #91c8e4)";
+        } else if (tempValue >= 31) {
+          conditionElement.textContent = "Panas";
+          document.getElementById("weatherIcon").style.background = "linear-gradient(135deg, #FF7F50, #FF6347)";
+        }
+      }
+
+      // Function to update weather data and icons
+      function updateWeather(humidValue, tempValue) {
+        const temperatureElement = document.getElementById("tempID");
+        const humidElement = document.getElementById("humidID");
+        const iconElement = document.getElementById("weatherIcon");
+        
+        // Update temperature
+        temperatureElement.innerHTML = `<span>${tempValue}°C</span>`;
+        
+        // Update humidity
+        humidElement.innerHTML = `
+          <i class="wi wi-humidity humidity-icon"></i>
+          <span>${humidValue}%</span>
+        `;
+        
+        // Update icon based on humidity
+        let iconClass = "wi wi-refresh";
+        if (humidValue >= 0 && humidValue <= 20) {
+          iconClass = "wi wi-day-sunny";
+        } else if (humidValue >= 21 && humidValue <= 50) {
+          iconClass = "wi wi-day-cloudy";
+        } else if (humidValue > 51) {
+          iconClass = "wi wi-rain";
+        }
+        
+        // Update icon with animation
+        iconElement.innerHTML = `<i class="${iconClass} animate-pulse"></i>`;
+        updateWeatherCondition(tempValue);
+        
+        // Update chart data
+        tempHistory.push(tempValue);
+        tempHistory.shift();
+        humidityHistory.push(humidValue);
+        humidityHistory.shift();
+      }
+
+      // Function to update gauge for distance sensor
+      function updateDistanceGauge(distance) {
+        const gaugeValue = document.getElementById("gaugeValue");
+        const gaugeFill = document.getElementById("gaugeFill");
+        
+        // Calculate percentage for the gauge (assuming max distance is 100cm)
+        const maxDistance = 100;
+        const percentage = Math.min(distance / maxDistance * 100, 100);
+        
+        // Update gauge display
+        gaugeValue.textContent = distance;
+        gaugeFill.style.setProperty("--percentage", `${percentage}%`);
+        
+        // Update gauge color based on distance
+        if (distance < 30) {
+          gaugeFill.style.background = `conic-gradient(#FF6347 ${percentage}%, #f5f7fa ${percentage}%)`;
+        } else if (distance >= 30 && distance < 70) {
+          gaugeFill.style.background = `conic-gradient(#FFA500 ${percentage}%, #f5f7fa ${percentage}%)`;
+        } else {
+          gaugeFill.style.background = `conic-gradient(#3a7ca5 ${percentage}%, #f5f7fa ${percentage}%)`;
+        }
+        
+        // Update history data
+        distanceHistory.push(distance);
+        distanceHistory.shift();
+      }
+
+      // Listen for LED status changes
+      onValue(ledRef, (snapshot) => {
+        if (snapshot.exists()) {
+          const led = snapshot.val();
+          Object.keys(led).forEach((key, index) => {
+            document.getElementById(`checkbox-${index+1}`).checked = led[key] === 1;
+          });
+          console.log('LED status changed', Object.values(led));
+        } else {
+          console.log("LED data not found");
+        }
+      });
+
+      window.toggleLED = () => {
+      const ledState = [1, 2, 3].map(i => document.getElementById(`checkbox-${i}`).checked ? 1 : 0);
+      
+      set(ledRef, {
+        led1: ledState[0],
+        led2: ledState[1],
+        led3: ledState[2]
+      }).then(() => console.log("LED state updated in Firebase"))
+        .catch(() => console.log("Failed to update LED state"));
+    }
+
+      // Listen for temperature and humidity changes
+      onValue(dhtRef, (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          temperature = data.t;
+          humidity = data.h;
+          console.log("Temperature update", temperature);
+          console.log("Humidity update", humidity);
+          updateWeather(humidity, temperature);
+        } else {
+          console.log("DHT data not found");
+        }
+      }, (error) => {
+        console.log("Error reading DHT data");
+      });
+
+      // Listen for ultrasonic sensor changes
+      onValue(usRef, (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          jarakValue = data.jarak;
+          console.log("Distance changed", jarakValue);
+          updateDistanceGauge(jarakValue);
+        } else {
+          console.log("Ultrasonic data not found");
+        }
+      });
+      </script>
+      </body>
+      </html>
