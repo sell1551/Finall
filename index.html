@@ -133,7 +133,8 @@
       const tempChartCtx = document.createElement('canvas');
       document.getElementById('tempChart').appendChild(tempChartCtx);
 
-      // Function to update weather condition based on temperature
+      // fungsi ganti tulisan berdasarkan suhu
+
       function updateWeatherCondition(tempValue) {
         const conditionElement = document.getElementById("conditionID");
         
@@ -149,7 +150,7 @@
         }
       }
 
-      // Function to update weather data and icons
+      // update data suhu dan icons
       function updateWeather(humidValue, tempValue) {
         const temperatureElement = document.getElementById("tempID");
         const humidElement = document.getElementById("humidID");
