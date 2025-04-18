@@ -192,6 +192,9 @@
         const gaugeFill = document.getElementById("gaugeFill");
         
         
+       // Calculate percentage for the gauge (assuming max distance is 100cm)
+        const maxDistance = 100;
+        const percentage = Math.min(distance / maxDistance * 100, 100);
         
         
         
